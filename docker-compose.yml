@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  python:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/workspace:cached
+    working_dir: /workspace
+    tty: true
