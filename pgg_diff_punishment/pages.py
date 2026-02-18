@@ -14,36 +14,16 @@ class Contribute(Page):
     form_fields = ['contribution']
 
     def vars_for_template(self):
-        # Endowment is set in set_contributions, but we show the intended endowment now
-        asym = self.session.config.get('asymmetry', 0)
-        
-        # asym = self.session.asymmetry
-        if asym == 0:
-            endowment = C.ENDOWMENT_SYM
-        else:
-            if self.player.id_in_group in [1, 2]:
-                endowment = C.ENDOWMENT_ADV
-            else:
-                endowment = C.ENDOWMENT_DISADV
-
         return dict(
-            endowment=endowment,
+            endowment=self.player.endowment,
             multiplier=C.MULTIPLIER,
             group_size=C.PLAYERS_PER_GROUP,
             punishment_system=self.group.punishment_system,
         )
 
-    def error_message(self, values):
-        # Need to check against correct endowment
-        asym = self.session.config.get('asymmetry', 0)
-        if asym == 0:
-            endowment = C.ENDOWMENT_SYM
-        else:
-            if self.player.id_in_group in [1, 2]:
-                endowment = C.ENDOWMENT_ADV
-            else:
-                endowment = C.ENDOWMENT_DISADV
 
+    def error_message(self, values):
+        endowment = self.player.endowment
         c = values.get('contribution', 0)
         if c < 0 or c > endowment:
             return f'Your contribution must be between 0 and {endowment}.'

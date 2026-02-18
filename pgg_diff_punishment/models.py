@@ -16,10 +16,12 @@ class C(BaseConstants):
     NUM_ROUNDS = 3
     # Here we keep it small for testing; adjust in session config.
 
-    # Endowments (MUs)
-    ENDOWMENT_SYM = 30
-    ENDOWMENT_ADV = 40
-    ENDOWMENT_DISADV = 20
+    # Endowment profiles (by id_in_group order 1..4)
+    ENDOWMENT_PROFILES = {
+        'sym_30': [30, 30, 30, 30],
+        'asym_40_40_20_20': [40, 40, 20, 20],
+        'asym_80_40_20_20': [80, 40, 20, 20],
+    }
 
     # MPCR of the public good: contributions * 1.6 / 4
     MULTIPLIER = 1.6
@@ -28,8 +30,7 @@ class C(BaseConstants):
     # 0 = no punishment
     # 1 = peer punishment (costly, 1 MU cost -> 2 MU fine)
     # 2 = democratic punishment (not coded here)
-    # 3 = central punishment rule (0.6 per MU not contributed, 75% prob.)
-    PUNISHMENT_SYSTEMS = [0, 1, 2, 3]
+    PUNISHMENT_SYSTEMS = [0, 1, 2]
 
     # Max MUs that can be invested in punishment in total (per punisher)
     MAX_PUNISHMENT_BUDGET = 9
@@ -38,29 +39,50 @@ class C(BaseConstants):
     PUNISHMENT_COST_PER_MU = 1
     PUNISHMENT_FINE_PER_MU = 2
 
-    # Central punishment rule
-    CENTRAL_FINE_PER_UNCONTRIBUTED = 0.6
-    # CENTRAL_PUNISH_PROB = 0.75  # 75%
-    CENTRAL_PUNISH_PROB = 1  # 75%
-
     INTRODUCTION_TEMPLATE = 'pgg_diff_punishment/Introduction.html'
 
 
 class Subsession(BaseSubsession):
 
     def creating_session(self):
-        # Set asymmetry flag from settings (0 = symmetric, 1 = asymmetric)
-        # self.session.asymmetry = self.session.config.get('asymmetry', 0)
-
-        # print(f"*** DEBUG: session.asymmetry = {self.session.asymmetry}")
-        # print(f"*** DEBUG: self.session.config = {self.session.config}")
-
-        # Get punishment system from settings (0 = none, 1 = peer, 3 = central)
+        # punishment system from config
         ps = self.session.config.get('punishment_system', 1)
-
-        # Assign punishment system to all groups in this round
         for g in self.get_groups():
             g.punishment_system = ps
+
+        # --- NEW: fixed endowment assignment ---
+        # Choose which profile to use (default: old asym 40-40-20-20 style)
+        profile_key = self.session.config.get('endowment_profile', 'asym_40_40_20_20')
+        profile = C.ENDOWMENT_PROFILES.get(profile_key)
+        if profile is None:
+            raise ValueError(f"Unknown endowment_profile: {profile_key}")
+
+        # Assign once in round 1, store in participant.vars, reuse in later rounds
+        for p in self.get_players():
+            if self.round_number == 1:
+                e = profile[p.id_in_group - 1]
+                p.participant.vars['fixed_endowment'] = e
+
+                # optional: store a status label too (useful for analysis)
+                if profile_key.startswith('sym'):
+                    p.participant.vars['status'] = 'symmetric'
+                else:
+                    # you can customize labels; here’s a simple one:
+                    if profile_key == 'asym_40_40_20_20':
+                        p.participant.vars['status'] = 'advantaged' if p.id_in_group in [1, 2] else 'disadvantaged'
+                    elif profile_key == 'asym_80_40_20_20':
+                        # three-tier labels
+                        if p.id_in_group == 1:
+                            p.participant.vars['status'] = 'top'
+                        elif p.id_in_group == 2:
+                            p.participant.vars['status'] = 'middle'
+                        else:
+                            p.participant.vars['status'] = 'bottom'
+
+            # every round: copy fixed values into Player fields
+            p.endowment = p.participant.vars['fixed_endowment']
+            p.status = p.participant.vars.get('status', '')
+
 
 
 class Group(BaseGroup):
@@ -72,33 +94,17 @@ class Group(BaseGroup):
 
     def set_contributions(self):
         players = self.get_players()
-
-        # Set endowment based on asymmetry and role
-        # We assume 2 advantaged (id_in_group 1 and 2) & 2 disadvantaged (3 and 4)
-        # in the asymmetric condition, and all 30 in symmetric.
-        # asym = self.session.asymmetry
-        asym = self.session.config.get('asymmetry', 0)
-        for p in players:
-            if asym == 0:
-                p.endowment = C.ENDOWMENT_SYM
-                p.status = 'symmetric' 
-            else:
-                if p.id_in_group in [1, 2]:
-                    p.endowment = C.ENDOWMENT_ADV
-                    p.status = 'advantaged'
-                else:
-                    p.endowment = C.ENDOWMENT_DISADV
-                    p.status = 'disadvantaged'
-
-        # Sum contributions and compute returns
+    
+        # DO NOT set endowment here anymore.
+        # It's already fixed per participant in Subsession.creating_session()
+    
         self.total_contribution = sum(p.contribution for p in players)
-        self.individual_return = (
-            self.total_contribution * C.MULTIPLIER / C.PLAYERS_PER_GROUP
-        )
-
+        self.individual_return = self.total_contribution * C.MULTIPLIER / C.PLAYERS_PER_GROUP
+    
         for p in players:
             p.private_account = p.endowment - p.contribution
             p.payoff_before_punishment = p.private_account + self.individual_return
+
 
     def apply_peer_punishment(self):
         """Costly peer punishment: 1 MU cost -> 2 MU fine, max 9 MU invested."""
@@ -172,7 +178,7 @@ class Group(BaseGroup):
             yes_votes = 0
             for v in voters:
                 vote_field = f'vote_exec_p{target.id_in_group}'
-                if getattr(v, vote_field, False):
+                if (getattr(v, vote_field, 0) or 0) == 1:
                     yes_votes += 1
     
             # majority rule among the 3 others: at least 2 yes votes
@@ -201,44 +207,6 @@ class Group(BaseGroup):
         for p in players:
             p.payoff -= p.punishment_cost
 
-
-    def apply_central_punishment(self):
-        """Central rule: 0.6 MU per MU not contributed, with 75% probability,
-        cost shared equally among other group members (fine:cost ratio 2:1)."""
-        players = self.get_players()
-        # Draw whether central punishment is executed this round
-        execute = random.random() < C.CENTRAL_PUNISH_PROB
-
-        if not execute:
-            # No punishment executed this period
-            for p in players:
-                p.punishment_cost = 0
-                p.punishment_received = 0
-                p.payoff = p.payoff_before_punishment
-            return
-
-        # For each player compute fine and cost spreading over others
-        n = len(players)
-        for p in players:
-            not_contributed = p.endowment - p.contribution
-            fine = not_contributed * C.CENTRAL_FINE_PER_UNCONTRIBUTED
-            # fine/cost ratio fixed at 2:1 => total cost borne by others is fine / 2
-            total_cost_on_others = fine / 2
-            cost_per_other = total_cost_on_others / (n - 1) if n > 1 else 0
-
-            # Fine for this player:
-            p.punishment_received = fine
-            p.payoff = p.payoff_before_punishment - fine
-
-            # Others' costs:
-            for o in players:
-                if o.id_in_group != p.id_in_group:
-                    o.punishment_cost += cost_per_other
-
-        # Subtract punishment cost from others' payoffs
-        for p in players:
-            p.payoff -= p.punishment_cost
-
     def set_payoffs(self):
         if self.punishment_system == 0:
             # no punishment
@@ -250,8 +218,6 @@ class Group(BaseGroup):
             self.apply_peer_punishment()
         elif self.punishment_system == 2:
             self.apply_democratic_punishment()
-        elif self.punishment_system == 3:
-            self.apply_central_punishment()
         else:
             # Placeholder for democratic punishment or other systems
             for p in self.get_players():

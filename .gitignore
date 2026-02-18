@@ -2,3 +2,6 @@
 *.html
 99_others/
 *.pyc
+
+__pycache__/
+pycache/

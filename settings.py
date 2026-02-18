@@ -24,13 +24,20 @@ SESSION_CONFIGS = [
         punishment_system=2,  # 0:none, 1:peer, 3:central
     ),
     dict(
-        name='pgg_sym_central',
-        display_name='PGG diff punishment - symmetric, central',
-        num_demo_participants=4,
+        name='pgg_40_40_20_20',
         app_sequence=['pgg_diff_punishment'],
-        asymmetry=0,
-        punishment_system=3,
+        num_demo_participants=4,
+        punishment_system=1,
+        endowment_profile='asym_40_40_20_20',
+    ),
+    dict(
+        name='pgg_80_40_20_20',
+        app_sequence=['pgg_diff_punishment'],
+        num_demo_participants=4,
+        punishment_system=1,
+        endowment_profile='asym_80_40_20_20',
     )
+
 ]
 
 
