@@ -1,0 +1,39 @@
+{% extends "otree/Page.html" %}
+
+{% block title %}
+Contribution decision
+{% endblock %}
+
+{% block content %}
+
+<p>
+    You are in round {{ subsession.round_number }} of {{ C.NUM_ROUNDS }}.
+</p>
+
+<p>
+    Your endowment in this round is <strong>{{ endowment }}</strong> points.
+</p>
+
+<p>
+    The group size is {{ group_size }}. The total contribution of the group will be
+    multiplied by {{ multiplier }} and then shared equally among all group members.
+</p>
+
+<hr>
+
+<p>
+    Please decide how many points you want to contribute to the group project.
+    The remaining points will stay in your private account.
+</p>
+
+<div class="form-group">
+    {{ formfield 'contribution' }}
+</div>
+
+<p>
+    Remember: your contribution must be between 0 and {{ endowment }}.
+</p>
+
+{{ next_button }}
+
+{% endblock %}

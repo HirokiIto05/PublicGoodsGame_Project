@@ -1,0 +1,41 @@
+{% extends "otree/Page.html" %}
+
+{% block title %}
+Round results
+{% endblock %}
+
+{% block content %}
+
+<p>
+    Round {{ subsession.round_number }} of {{ C.NUM_ROUNDS }}.
+</p>
+
+<h4>Your decisions</h4>
+<ul>
+    <li>Endowment: {{ endowment }}</li>
+    <li>Your contribution: {{ contribution }}</li>
+    <li>Points kept in private account: {{ private_account }}</li>
+</ul>
+
+<h4>Group outcome</h4>
+<ul>
+    <li>Total group contribution: {{ total_contribution }}</li>
+    <li>Return from the group project: {{ individual_return }}</li>
+</ul>
+
+<h4>Punishment</h4>
+<ul>
+    <li>Punishment system this round: {{ punishment_system }}</li>
+    <li>Punishment you received: {{ punishment_received }}</li>
+    <li>Cost of punishing others: {{ punishment_cost }}</li>
+</ul>
+
+<h4>Your payoff</h4>
+<ul>
+    <li>Payoff before punishment: {{ payoff_before_punishment }}</li>
+    <li><strong>Final payoff this round: {{ payoff }}</strong></li>
+</ul>
+
+{{ next_button }}
+
+{% endblock %}

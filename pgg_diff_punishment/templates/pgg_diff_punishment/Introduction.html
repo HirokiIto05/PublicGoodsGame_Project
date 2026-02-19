@@ -1,0 +1,38 @@
+{% extends "otree/Page.html" %}
+
+{% block title %}
+Instructions
+{% endblock %}
+
+{% block content %}
+
+<p>
+    In this experiment, you will repeatedly play a public goods game in a group of
+    {{ C.PLAYERS_PER_GROUP }} participants.
+</p>
+
+<p>
+    In each round, you receive an endowment of points. You can decide how many points
+    to contribute to the group project and how many to keep for yourself.
+</p>
+
+<p>
+    The total contributions of all group members are multiplied by {{ C.MULTIPLIER }}
+    and then divided equally among all group members, regardless of their individual
+    contributions.
+</p>
+
+<p>
+    In some rounds, a punishment system may be available. Depending on the punishment
+    system, group members can punish each other (peer punishment) or punishment may be
+    imposed automatically by a rule (central punishment).
+</p>
+
+<p>
+    Your earnings in the experiment will depend on your own decisions and the decisions
+    of the other group members.
+</p>
+
+{{ next_button }}
+
+{% endblock %}

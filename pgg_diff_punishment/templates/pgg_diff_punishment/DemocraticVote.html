@@ -1,0 +1,48 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Democratic Vote
+{% endblock %}
+
+{% block content %}
+    <h3>Vote on Punishment Execution</h3>
+    
+    <p>Vote whether to execute proposed punishment for each player:</p>
+
+    {% for target in targets %}
+        <div class="form-group mb-4">
+            <label class="form-label fw-bold">
+                Player {{ target.id_in_group }} 
+                ({{ target.contribution }}/{{ target.endowment }}, 
+                {{ target.total_proposed_points }} points proposed)
+            </label>
+            
+            <div class="form-check">
+                <input class="form-check-input" 
+                       type="radio" 
+                       name="vote_exec_p{{ target.id_in_group }}" 
+                       id="no_{{ target.id_in_group }}" 
+                       value="0">
+                <label class="form-check-label" for="no_{{ target.id_in_group }}">
+                    No (Do not execute)
+                </label>
+            </div>
+            
+            <div class="form-check">
+                <input class="form-check-input" 
+                       type="radio" 
+                       name="vote_exec_p{{ target.id_in_group }}" 
+                       id="yes_{{ target.id_in_group }}" 
+                       value="1">
+                <label class="form-check-label" for="yes_{{ target.id_in_group }}">
+                    Yes (Execute punishment)
+                </label>
+            </div>
+            
+            <hr>
+        </div>
+    {% endfor %}
+
+    {% next_button %}
+{% endblock %}

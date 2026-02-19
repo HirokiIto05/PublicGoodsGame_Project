@@ -1,7 +1,7 @@
 *.DS_Store
-*.html
 99_others/
 *.pyc
+*.cpython-311.pyc
 
 __pycache__/
-pycache/
+db.sqlite3

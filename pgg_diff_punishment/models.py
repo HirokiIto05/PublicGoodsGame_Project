@@ -1,11 +1,14 @@
 from otree.api import *
-import random
+import pycountry
+
 
 doc = """
 Public goods game with asymmetric vs symmetric endowments,
 and different punishment systems (peer vs central; easily extendable).
 Based on Nockur, Pfattheicher & Keller (2021, JESP).
 """
+
+
 
 
 class C(BaseConstants):
@@ -15,6 +18,11 @@ class C(BaseConstants):
     # In the original paper: 24 periods, 6 per punishment system.
     NUM_ROUNDS = 3
     # Here we keep it small for testing; adjust in session config.
+
+    COUNTRY_CHOICES = sorted(
+        [(c.alpha_2, c.name) for c in pycountry.countries],
+        key=lambda x: x[1]
+    )
 
     # Endowment profiles (by id_in_group order 1..4)
     ENDOWMENT_PROFILES = {
@@ -262,3 +270,33 @@ class Player(BasePlayer):
                 continue
             total += getattr(self, f'punish_p{i}', 0) or 0
         return total
+
+    # --- Demographics ---
+    age = models.IntegerField(
+        label="Age",
+        min=16,
+        max=100,
+        blank=True,
+    )
+
+    gender = models.StringField(
+        label="Gender",
+        choices=[
+            ["male", "Male"],
+            ["female", "Female"],
+            ["prefer_not", "Prefer not to say"]
+        ],
+        blank=True,
+    )
+
+    def country_choices():
+        return sorted(
+            [(c.alpha_2, c.name) for c in pycountry.countries],
+            key=lambda x: x[1]
+        )
+
+
+    nationality = models.StringField(
+        label="Nationality",
+        choices=C.COUNTRY_CHOICES
+    )

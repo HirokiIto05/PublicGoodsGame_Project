@@ -1,0 +1,26 @@
+{% extends "otree/Page.html" %}
+
+{% block title %}
+Demographics
+{% endblock %}
+
+{% block content %}
+
+<p>Please answer a few demographic questions.</p>
+
+<div class="form-group">
+    {{ formfield 'age' }}
+</div>
+
+<div class="form-group">
+    {{ formfield 'gender' }}
+</div>
+
+<div class="form-group">
+    {{ formfield 'nationality' }}
+</div>
+
+
+{{ next_button }}
+
+{% endblock %}

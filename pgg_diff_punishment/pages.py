@@ -139,8 +139,19 @@ class Results(Page):
             # asymmetry=self.session.asymmetry
         )
 
+class Demographics(Page):
+    form_model = "player"
+    form_fields = ["age", "gender", "nationality"]
+
+    def is_displayed(self):
+        return self.round_number == 1
+
+    def vars_for_template(self):
+        return dict()
+
 
 page_sequence = [
+    Demographics,
     Contribute,
     ContributeWaitPage,
     Punish,                 # proposals (peer + democratic)

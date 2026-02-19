@@ -1,0 +1,51 @@
+{% extends "otree/Page.html" %}
+
+{% block title %}
+Punishment decision
+{% endblock %}
+
+{% block content %}
+
+<p>
+    Below you see the contributions of the other members of your group in this round.
+</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Player</th>
+            <th>Endowment</th>
+            <th>Contribution</th>
+            <th>Relative contribution</th>
+            <th>Punishment points</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for o in others %}
+        <tr>
+            <td>Player {{ o.id_in_group }}</td>
+            <td>{{ o.endowment }}</td>
+            <td>{{ o.contribution }}</td>
+            <td>{{ o.relative_contribution }}</td>
+            <td>
+                {{ formfield o.field_name }}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p>
+    You can assign up to {{ max_budget }} punishment points in total.
+    For each punishment point you assign, you pay {{ cost_per_mu }} point(s),
+    and the punished player loses {{ fine_per_mu }} point(s).
+</p>
+
+<p>
+    Your own contribution in this round was {{ own_contribution }} out of
+    {{ own_endowment }} points.
+</p>
+
+{{ next_button }}
+
+{% endblock %}
