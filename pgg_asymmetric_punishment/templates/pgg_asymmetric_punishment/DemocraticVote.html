@@ -6,43 +6,57 @@
 {% endblock %}
 
 {% block content %}
-    <h3>Vote on Punishment Execution</h3>
-    
-    <p>Vote whether to execute proposed punishment for each player:</p>
+<h3 class="mb-3">Democratic Vote</h3>
 
-    {% for target in targets %}
-        <div class="form-group mb-4">
-            <label class="form-label fw-bold">
-                Player {{ target.id_in_group }} 
-                ({{ target.contribution }}/{{ target.endowment }}, 
-                {{ target.total_proposed_points }} points proposed)
-            </label>
-            
-            <div class="form-check">
-                <input class="form-check-input" 
-                       type="radio" 
-                       name="vote_exec_p{{ target.id_in_group }}" 
-                       id="no_{{ target.id_in_group }}" 
-                       value="0">
-                <label class="form-check-label" for="no_{{ target.id_in_group }}">
-                    No (Do not execute)
-                </label>
-            </div>
-            
-            <div class="form-check">
-                <input class="form-check-input" 
-                       type="radio" 
-                       name="vote_exec_p{{ target.id_in_group }}" 
-                       id="yes_{{ target.id_in_group }}" 
-                       value="1">
-                <label class="form-check-label" for="yes_{{ target.id_in_group }}">
-                    Yes (Execute punishment)
-                </label>
-            </div>
-            
-            <hr>
-        </div>
-    {% endfor %}
+<p class="text-muted">
+    Please vote whether the proposed punishment should be executed for each player.
+</p>
 
-    {% next_button %}
+<div class="table-responsive">
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th style="width: 14%;">Player</th>
+                <th style="width: 18%;">Contribution</th>
+                <th style="width: 18%;">Endowment</th>
+                <th style="width: 20%;">Proposed points</th>
+                <th style="width: 30%;">Your vote</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for target in targets %}
+            <tr>
+                <td class="fw-bold">P{{ target.id_in_group }}</td>
+
+                <td>
+                    {{ target.contribution }}
+                </td>
+
+                <td>
+                    {% if hide_others_endowment %}
+                        <span class="text-muted">Hidden</span>
+                    {% else %}
+                        {{ target.endowment }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {{ target.total_proposed_points }}
+                    <span class="text-muted">
+                        (fine if executed: {{ target.implied_fine }})
+                    </span>
+                </td>
+
+                <td>
+                    {# IMPORTANT: keep using formfield so selections persist after errors #}
+                    {{ formfield target.vote_field label="" }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% next_button %}
 {% endblock %}

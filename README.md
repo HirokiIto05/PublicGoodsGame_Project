@@ -1,10 +1,4 @@
-Below is a draft **README.md** for your project based on the uploaded files (`models.py`, `pages.py`, `settings.py`, `Dockerfile`, `docker-compose.yml`).
-
----
-
-# Public goods game with asymmetric endowments and punishment systems
-
-## Summary
+# Summary
 
 This project implements a **Public Goods Game (PGG)** using **oTree**, designed to study how different punishment institutions affect cooperation under symmetric and asymmetric endowment distributions.
 
@@ -28,35 +22,7 @@ The application is containerized using Docker and can be run locally via `docker
 
 ---
 
-## Experimental design
-
-### public goods game
-
-* Group size: 4 players
-* Each player receives an endowment (treatment dependent)
-* Players decide how much to contribute to a public good
-* Contributions are multiplied (MPCR mechanism)
-* Earnings depend on own contribution and total group contribution
-
-### Endowment Profiles
-
-Defined in `models.py`:
-
-* Symmetric: (30, 30, 30, 30)
-* Asymmetric (moderate inequality): (40, 40, 20, 20)
-* Asymmetric (high inequality): (80, 40, 20, 20)
-
-### Punishment Stage
-
-Depending on treatment:
-
-* Peer punishment
-* Potential central punishment
-* Configurable punishment budget and cost structure
-
----
-
-## Project folder structure
+# Project folder structure
 
 ```
 PublicGoodsGame_Project/
@@ -86,57 +52,19 @@ PublicGoodsGame_Project/
 
 ---
 
-````markdown
-## Getting Started
 
-Follow the steps below to run the project locally using Docker.
+# Getting Started
 
-### 1. Start the Docker Container
+Move to the project root directory:
 
-From the project root directory, run:
+cd PGG_Project
 
-```bash
+Then run:
+
 docker compose up -d
-````
-
-This command:
-
-* Builds the Docker image (if not already built)
-* Starts the container in detached mode
-* Exposes port `8000` to your local machine
-
----
-
-### 2. Enter the Container
-
-Open a shell inside the running container:
-
-```bash
 docker compose exec python bash
-```
+otree devserver 0.0.0.0:8000
 
-You are now inside the container environment (`/workspace`).
+Finally, open your browser and go to:
 
----
-
-### 3. Start the oTree Server
-
-Inside the container, run:
-
-```bash
-otree devserver
-```
-
-The development server will start and listen on port `8000`.
-
----
-
-### 4. Access the Application
-
-Open your browser and go to:
-
-```
 http://localhost:8000
-```
-
-

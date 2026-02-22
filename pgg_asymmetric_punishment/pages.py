@@ -147,6 +147,12 @@ class DemocraticVote(Page):
             punishment_info_mode=info_mode,
             hide_others_endowment=hide_others_endowment,
         )
+    
+    def error_message(self, values):
+        # Check if any vote field is missing
+        for field in self.get_form_fields():
+            if values.get(field) is None:
+                return "Please select an option for all players."
 
 
 class DemocraticVoteWaitPage(WaitPage):

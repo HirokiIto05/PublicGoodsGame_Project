@@ -274,10 +274,10 @@ class Player(BasePlayer):
     punish_p4 = models.IntegerField(min=0, max=C.MAX_PUNISHMENT_BUDGET, initial=0)
     
     # Democratic punishment voting (vote whether to execute punishment on each target)
-    vote_exec_p1 = models.IntegerField(choices=[[0, 'No'], [1, 'Yes']], widget=widgets.RadioSelect())
-    vote_exec_p2 = models.IntegerField(choices=[[0, 'No'], [1, 'Yes']], widget=widgets.RadioSelect())
-    vote_exec_p3 = models.IntegerField(choices=[[0, 'No'], [1, 'Yes']], widget=widgets.RadioSelect())
-    vote_exec_p4 = models.IntegerField(choices=[[0, 'No'], [1, 'Yes']], widget=widgets.RadioSelect())
+    vote_exec_p1 = models.IntegerField(choices=[[0, 'No (Do not execute)'], [1, 'Yes (Execute punishment)']], widget=widgets.RadioSelect())
+    vote_exec_p2 = models.IntegerField(choices=[[0, 'No (Do not execute)'], [1, 'Yes (Execute punishment)']], widget=widgets.RadioSelect())
+    vote_exec_p3 = models.IntegerField(choices=[[0, 'No (Do not execute)'], [1, 'Yes (Execute punishment)']], widget=widgets.RadioSelect())
+    vote_exec_p4 = models.IntegerField(choices=[[0, 'No (Do not execute)'], [1, 'Yes (Execute punishment)']], widget=widgets.RadioSelect())
 
 
     def available_punishment_budget(self):
