@@ -17,18 +17,16 @@ class C(BaseConstants):
 
     # In the original paper: 24 periods, 6 per punishment system.
     NUM_ROUNDS = 3
-    # Here we keep it small for testing; adjust in session config.
 
     COUNTRY_CHOICES = sorted(
         [(c.alpha_2, c.name) for c in pycountry.countries],
         key=lambda x: x[1]
     )
 
-    # Endowment profiles (by id_in_group order 1..4)
     ENDOWMENT_PROFILES = {
         'sym_30': [30, 30, 30, 30],
         'asym_40_40_20_20': [40, 40, 20, 20],
-        'asym_80_40_20_20': [80, 40, 20, 20],
+        'asym_60_30_20_10': [60, 30, 20, 10],
     }
 
     # MPCR of the public good: contributions * 1.6 / 4
@@ -37,15 +35,19 @@ class C(BaseConstants):
     # Punishment systems:
     # 0 = no punishment
     # 1 = peer punishment (costly, 1 MU cost -> 2 MU fine)
-    # 2 = democratic punishment (not coded here)
+    # 2 = democratic punishment 
     PUNISHMENT_SYSTEMS = [0, 1, 2]
 
     # Max MUs that can be invested in punishment in total (per punisher)
     MAX_PUNISHMENT_BUDGET = 9
 
+
+    PUNISHMENT_INFO_MODES = ['full', 'incomplete']
+
     # Cost-to-fine ratio 1:2 (Fehr & Gächter; paper uses same ratio)
     PUNISHMENT_COST_PER_MU = 1
     PUNISHMENT_FINE_PER_MU = 2
+
 
     INTRODUCTION_TEMPLATE = 'pgg_diff_punishment/Introduction.html'
 
@@ -53,45 +55,61 @@ class C(BaseConstants):
 class Subsession(BaseSubsession):
 
     def creating_session(self):
-        # punishment system from config
+
+        # Get punishment system from session config
         ps = self.session.config.get('punishment_system', 1)
         for g in self.get_groups():
             g.punishment_system = ps
 
-        # --- NEW: fixed endowment assignment ---
-        # Choose which profile to use (default: old asym 40-40-20-20 style)
-        profile_key = self.session.config.get('endowment_profile', 'asym_40_40_20_20')
-        profile = C.ENDOWMENT_PROFILES.get(profile_key)
-        if profile is None:
-            raise ValueError(f"Unknown endowment_profile: {profile_key}")
+        # --- Select endowment profile based on asymmetry level ---
+        # asymmetry is expected to be 0 (symmetric), 1 (small gap), or 2 (large gap)
+        asym = self.session.config.get('asymmetry', 0)
 
-        # Assign once in round 1, store in participant.vars, reuse in later rounds
+        # Map asymmetry values to endowment profile keys
+        asym_to_profile = {
+            0: 'sym_30',
+            1: 'asym_40_40_20_20',
+            2: 'asym_60_30_20_10',
+        }
+
+        profile_key = asym_to_profile.get(asym)
+        if profile_key is None:
+            raise ValueError(f"Unknown asymmetry value: {asym}")
+
+        profile = C.ENDOWMENT_PROFILES[profile_key]
+
+        # Assign endowments only once in round 1
+        # Store them in participant.vars so they remain fixed across rounds
         for p in self.get_players():
+
             if self.round_number == 1:
+                # Assign endowment based on id_in_group order
                 e = profile[p.id_in_group - 1]
                 p.participant.vars['fixed_endowment'] = e
 
-                # optional: store a status label too (useful for analysis)
-                if profile_key.startswith('sym'):
+                # Store status label for later analysis
+                if asym == 0:
                     p.participant.vars['status'] = 'symmetric'
-                else:
-                    # you can customize labels; here’s a simple one:
-                    if profile_key == 'asym_40_40_20_20':
-                        p.participant.vars['status'] = 'advantaged' if p.id_in_group in [1, 2] else 'disadvantaged'
-                    elif profile_key == 'asym_80_40_20_20':
-                        # three-tier labels
-                        if p.id_in_group == 1:
-                            p.participant.vars['status'] = 'top'
-                        elif p.id_in_group == 2:
-                            p.participant.vars['status'] = 'middle'
-                        else:
-                            p.participant.vars['status'] = 'bottom'
 
-            # every round: copy fixed values into Player fields
-            p.endowment = p.participant.vars['fixed_endowment']
+                elif asym == 1:
+                    # Two advantaged (first two), two disadvantaged (last two)
+                    if p.id_in_group in [1, 2]:
+                        p.participant.vars['status'] = 'advantaged'
+                    else:
+                        p.participant.vars['status'] = 'disadvantaged'
+
+                elif asym == 2:
+                    # Three-tier hierarchy: top, middle, bottom
+                    if p.id_in_group == 1:
+                        p.participant.vars['status'] = 'top'
+                    elif p.id_in_group == 2:
+                        p.participant.vars['status'] = 'middle'
+                    else:
+                        p.participant.vars['status'] = 'bottom'
+
+            # In every round, copy stored values into Player fields
+            p.endowment = p.participant.vars.get('fixed_endowment')
             p.status = p.participant.vars.get('status', '')
-
-
 
 class Group(BaseGroup):
     punishment_system = models.IntegerField()
@@ -149,7 +167,7 @@ class Group(BaseGroup):
         Democratic punishment (per Nockur et al., 2021):
         1) Each player proposes punishment points for others (same as peer).
         2) For each target player T, the other 3 players vote whether to execute
-            the *suggested* (summed) punishment on T.
+            the suggested punishment on T.
         3) If at least 2 of 3 vote YES, punishment is executed:
                 - T receives fine = (sum proposed points) * 2
                 - proposers pay costs = (their proposed points) * 1
@@ -274,7 +292,7 @@ class Player(BasePlayer):
     # --- Demographics ---
     age = models.IntegerField(
         label="Age",
-        min=16,
+        min=15,
         max=100,
         blank=True,
     )

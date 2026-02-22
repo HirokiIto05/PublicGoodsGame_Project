@@ -15,25 +15,94 @@ Contribution decision
 </p>
 
 <p>
-    The group size is {{ group_size }}. The total contribution of the group will be
-    multiplied by {{ multiplier }} and then shared equally among all group members.
+    The group size is {{ group_size }}.
+    Total contributions will be multiplied by {{ multiplier }}
+    and shared equally.
 </p>
 
 <hr>
 
 <p>
-    Please decide how many points you want to contribute to the group project.
-    The remaining points will stay in your private account.
+    How many points do you want to contribute?
 </p>
 
 <div class="form-group">
     {{ formfield 'contribution' }}
 </div>
 
+<hr>
+
+<h5>Your payoff before punishment</h5>
+
 <p>
-    Remember: your contribution must be between 0 and {{ endowment }}.
+    Your payoff =
+</p>
+
+<p style="font-size:18px;">
+    (<span id="endowment_val">{{ endowment }}</span>
+    − <span id="contribution_val">0</span>)
+    + ({{ multiplier }} / {{ group_size }})
+    × (<span id="contribution_val2">0</span>
+    + Others' total contribution)
+</p>
+
+<p>
+    If others contribute 0, your payoff will be:
+    <strong><span id="min_payoff">-</span></strong>
 </p>
 
 {{ next_button }}
+
+<script>
+(function () {
+
+    function toNum(x) {
+        const cleaned = String(x).replace(/[^\d.\-]/g, '');
+        const v = parseFloat(cleaned);
+        return Number.isFinite(v) ? v : 0;
+    }
+
+    const ENDOWMENT = toNum("{{ endowment }}");
+    const MULTIPLIER = toNum("{{ multiplier }}");
+    const GROUP_SIZE = toNum("{{ group_size }}");
+    const SHARE = MULTIPLIER / GROUP_SIZE;
+
+    const contribInput =
+        document.getElementById('id_contribution') ||
+        document.querySelector('input[name="contribution"]');
+
+    const elC1 = document.getElementById('contribution_val');
+    const elC2 = document.getElementById('contribution_val2');
+    const elMin = document.getElementById('min_payoff');
+
+    function fmt(x){
+        const r = Math.round(x * 100) / 100;
+        if (Math.abs(r - Math.round(r)) < 1e-9) return String(Math.round(r));
+        return r.toFixed(2);
+    }
+
+    function updatePreview() {
+        if (!contribInput) return;
+
+        let c = toNum(contribInput.value);
+        if (c < 0) c = 0;
+        if (c > ENDOWMENT) c = ENDOWMENT;
+
+        elC1.textContent = c;
+        elC2.textContent = c;
+
+        const minPayoff = (ENDOWMENT - c) + SHARE * c;
+        elMin.textContent = fmt(minPayoff);
+    }
+
+    updatePreview();
+    if (contribInput) {
+        ['input','keyup','change'].forEach(ev =>
+            contribInput.addEventListener(ev, updatePreview)
+        );
+    }
+
+})();
+</script>
 
 {% endblock %}

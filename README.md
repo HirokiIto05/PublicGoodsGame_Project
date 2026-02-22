@@ -4,16 +4,27 @@ Understood — here is a **clear, structured, and concise README** with a logica
 
 # Public Goods Game (oTree Implementation)
 
-## 1. Project Summary
+# 1. Overview
 
-This project implements a **Public Goods Game (PGG)** in oTree with:
+This project implements a Public Goods Game (PGG) in oTree with symmetric and asymmetric endowment distributions and multiple punishment systems.
 
-* Symmetric and asymmetric endowments
-* Peer punishment
-* Democratic punishment
-* Extended inequality treatments
+The experimental design follows the structure introduced in:
 
-The experiment studies how punishment mechanisms affect cooperation under resource inequality.
+Nockur, L., Pfattheicher, S., & Keller, J. (2021). Different punishment systems in a public goods game with asymmetric endowments. *Journal of Experimental Social Psychology*, 93, 104096. 
+
+lalia.N_different_punishment
+
+Specifically, this implementation reproduces:
+
+Symmetric vs. asymmetric endowment conditions
+
+Peer punishment
+
+Democratic punishment
+
+In addition, the project extends the framework by introducing alternative endowment distributions and a modular oTree-based structure that allows flexible treatment configuration.
+
+This repository is intended for experimental economics research, replication studies, and laboratory implementation.
 
 ---
 
@@ -179,65 +190,30 @@ If rejected:
 
 # 5. Running the Project with Docker
 
-## 5.1 Requirements
+## 5.2 Option A: Using Docker Compose (Recommended)
 
-* Docker installed
-* Project directory containing a Dockerfile
+Docker Compose manages the container lifecycle and volume mounting automatically.
 
-Check installation:
+### Start the Container
 
-```bash
-docker --version
-```
-
----
-
-## 5.2 Build Image
-
-From the project root:
+From the project root directory:
 
 ```bash
-docker build -t pgg-otree .
+docker-compose up -d
 ```
 
----
-
-## 5.3 Run Server
+Inside the container, run oTree devserver:
 
 ```bash
-docker run -p 8000:8000 pgg-otree
+otree devserver 
 ```
 
-Access in browser:
+Access the application in your browser:
 
 ```
 http://localhost:8000
 ```
 
----
-
-## 5.4 Development Mode
-
-To run oTree devserver:
-
-```bash
-docker run -it -p 8000:8000 pgg-otree otree devserver
-```
-
----
-
-## 5.5 Stop Container
-
-```bash
-docker ps
-docker stop <container_id>
-```
-
-Or press:
-
-```
-CTRL + C
-```
 
 ---
 
