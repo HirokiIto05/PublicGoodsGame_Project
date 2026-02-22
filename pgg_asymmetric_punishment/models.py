@@ -16,10 +16,10 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = 4
 
     # In the original paper: 24 periods, 6 per punishment system.
-    NUM_ROUNDS = 2
+    NUM_ROUNDS = 12
 
     # Switch every 6 rounds
-    SWITCH_AFTER_ROUNDS = 1
+    SWITCH_AFTER_ROUNDS = 6
 
     COUNTRY_CHOICES = sorted(
         [(c.alpha_2, c.name) for c in pycountry.countries],
