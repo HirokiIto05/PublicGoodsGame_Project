@@ -12,7 +12,7 @@ Based on Nockur, Pfattheicher & Keller (2021, JESP).
 
 
 class C(BaseConstants):
-    NAME_IN_URL = 'pgg_diff_punishment'
+    NAME_IN_URL = 'pgg_asymmetric_punishment'
     PLAYERS_PER_GROUP = 4
 
     # In the original paper: 24 periods, 6 per punishment system.
@@ -49,7 +49,7 @@ class C(BaseConstants):
     PUNISHMENT_FINE_PER_MU = 2
 
 
-    INTRODUCTION_TEMPLATE = 'pgg_diff_punishment/Introduction.html'
+    INTRODUCTION_TEMPLATE = 'pgg_asymmetric_punishment/Introduction.html'
 
 
 class Subsession(BaseSubsession):
