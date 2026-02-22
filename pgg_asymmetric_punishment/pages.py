@@ -219,9 +219,9 @@ class End(Page):
 
 page_sequence = [
     Introduction,          # General instructions (shown at the beginning)
+    Demographics,
     InstructionPeer,       # Shown at the start of the peer punishment block
     InstructionDemocratic, # Shown at the start of the democratic punishment block
-    # Demographics,
     Contribute,
     ContributeWaitPage,
     Punish,                 # proposals (peer + democratic)
