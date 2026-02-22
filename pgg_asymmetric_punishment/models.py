@@ -15,7 +15,6 @@ class C(BaseConstants):
     NAME_IN_URL = 'pgg_asymmetric_punishment'
     PLAYERS_PER_GROUP = 4
 
-    # In the original paper: 24 periods, 6 per punishment system.
     NUM_ROUNDS = 12
 
     # Switch every 6 rounds
@@ -106,9 +105,6 @@ class Group(BaseGroup):
 
     def set_contributions(self):
         players = self.get_players()
-    
-        # DO NOT set endowment here anymore.
-        # It's already fixed per participant in Subsession.creating_session()
     
         self.total_contribution = sum(p.contribution for p in players)
         self.individual_return = self.total_contribution * C.MULTIPLIER / C.PLAYERS_PER_GROUP

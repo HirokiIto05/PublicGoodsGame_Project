@@ -35,18 +35,10 @@ class InstructionDemocratic(Page):
 class Contribute(Page):
     form_model = 'player'
     form_fields = ['contribution']
-
-    # def vars_for_template(self):
-    #     return dict(
-    #         endowment=self.player.endowment,
-    #         multiplier=C.MULTIPLIER,
-    #         group_size=C.PLAYERS_PER_GROUP,
-    #         punishment_system=self.group.punishment_system,
-    #     )
     
     def vars_for_template(self):
         return dict(
-            endowment=int(self.player.endowment),   # ← ここ重要
+            endowment=int(self.player.endowment),   
             multiplier=float(C.MULTIPLIER),
             group_size=int(C.PLAYERS_PER_GROUP),
             punishment_system=self.group.punishment_system,
