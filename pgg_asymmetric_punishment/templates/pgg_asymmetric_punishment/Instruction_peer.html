@@ -1,0 +1,29 @@
+{% extends "global/Page.html" %}
+{% load otree %}
+
+{% block title %}
+Peer Punishment
+{% endblock %}
+
+{% block content %}
+
+<h3>Peer Punishment</h3>
+
+<div class="alert alert-info">
+    In this block, punishment is decided individually.
+</div>
+
+<ul>
+    <li>After seeing contributions, you may assign punishment points to other players.</li>
+    <li>Each punishment point costs <strong>1 point</strong> to you.</li>
+    <li>Each punishment point reduces the target’s payoff by <strong>2 points</strong>.</li>
+    <li>You may assign at most <strong>9 points</strong> in total per round.</li>
+</ul>
+
+<p>
+Punishment is implemented automatically. 
+</p>
+
+{{ next_button }}
+
+{% endblock %}

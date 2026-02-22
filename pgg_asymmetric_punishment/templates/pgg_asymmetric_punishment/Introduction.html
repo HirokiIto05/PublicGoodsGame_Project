@@ -1,4 +1,5 @@
-{% extends "otree/Page.html" %}
+{% extends "global/Page.html" %}
+{% load otree %}
 
 {% block title %}
 Instructions
@@ -6,32 +7,38 @@ Instructions
 
 {% block content %}
 
-<p>
-    In this experiment, you will repeatedly play a public goods game in a group of
-    {{ C.PLAYERS_PER_GROUP }} participants.
-</p>
+{% if punishment_system == 1 %}
 
 <p>
-    In each round, you receive an endowment of points. You can decide how many points
-    to contribute to the group project and how many to keep for yourself.
+You will play a public goods game in a group of {{ C.PLAYERS_PER_GROUP }} participants for several rounds.
 </p>
 
-<p>
-    The total contributions of all group members are multiplied by {{ C.MULTIPLIER }}
-    and then divided equally among all group members, regardless of their individual
-    contributions.
+<ul>
+    <li>Each round you receive an endowment.</li>
+    <li>You choose how many points to contribute to the group project.</li>
+    <li>Total contributions are multiplied by {{ C.MULTIPLIER }} and shared equally among all group members.</li>
+</ul>
+
+<p class="text-muted">
+In some rounds, punishment decisions will be possible. The exact punishment rule will be explained when it applies.
 </p>
 
-<p>
-    In some rounds, a punishment system may be available. Depending on the punishment
-    system, group members can punish each other (peer punishment) or punishment may be
-    imposed automatically by a rule (central punishment).
-</p>
+{% else %}
 
-<p>
-    Your earnings in the experiment will depend on your own decisions and the decisions
-    of the other group members.
-</p>
+<h3>New Rule: Democratic Punishment</h3>
+
+<div class="alert alert-warning">
+    <strong>The punishment rule has changed.</strong><br>
+    You will now <strong>propose</strong> punishment, and then the group will <strong>vote</strong> on whether it is executed.
+</div>
+
+<ul>
+    <li><strong>Proposal:</strong> You may propose punishment points for other players (max <strong>9</strong> total).</li>
+    <li><strong>Cost/Fine:</strong> If executed, each point costs the proposer <strong>1</strong> and reduces the target’s payoff by <strong>2</strong>.</li>
+    <li><strong>Voting:</strong> Punishment is executed only if at least <strong>2 out of 3</strong> other players vote “Yes”.</li>
+</ul>
+
+{% endif %}
 
 {{ next_button }}
 

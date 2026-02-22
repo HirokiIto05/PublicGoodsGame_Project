@@ -3,11 +3,34 @@ from .models import C, Subsession, Group, Player
 
 
 class Introduction(Page):
-    template_name = C.INTRODUCTION_TEMPLATE
+    template_name = 'pgg_asymmetric_punishment/Introduction.html'
 
     def is_displayed(self):
+        # Show only once at the very beginning
         return self.round_number == 1
 
+    def vars_for_template(self):
+        return dict(
+            punishment_system=self.group.punishment_system,
+        )
+
+
+class InstructionPeer(Page):
+    template_name = 'pgg_asymmetric_punishment/Instruction_peer.html'
+
+    def is_displayed(self):
+        # Show at the start of the peer block (round 1)
+        return self.round_number == 1
+
+
+class InstructionDemocratic(Page):
+    template_name = 'pgg_asymmetric_punishment/Instruction_democratic.html'
+
+    def is_displayed(self):
+        # Show when the democratic block starts (e.g., round 7)
+        return self.round_number == C.SWITCH_AFTER_ROUNDS + 1
+    
+    
 
 class Contribute(Page):
     form_model = 'player'
@@ -187,9 +210,17 @@ class Demographics(Page):
 
     def vars_for_template(self):
         return dict()
+    
+class End(Page):
+    def is_displayed(self):
+        # Display only in the final round
+        return self.round_number == C.NUM_ROUNDS
 
 
 page_sequence = [
+    Introduction,          # General instructions (shown at the beginning)
+    InstructionPeer,       # Shown at the start of the peer punishment block
+    InstructionDemocratic, # Shown at the start of the democratic punishment block
     # Demographics,
     Contribute,
     ContributeWaitPage,
@@ -198,5 +229,5 @@ page_sequence = [
     DemocraticVote,         # voting (democratic only)
     DemocraticVoteWaitPage, # computes payoffs for democratic
     Results,
+    End,
 ]
-

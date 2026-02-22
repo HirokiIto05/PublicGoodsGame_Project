@@ -18,7 +18,11 @@
             <tr>
                 <th style="width: 14%;">Player</th>
                 <th style="width: 18%;">Contribution</th>
-                <th style="width: 18%;">Endowment</th>
+
+                {% if not hide_others_endowment %}
+                    <th style="width: 18%;">Endowment</th>
+                {% endif %}
+
                 <th style="width: 20%;">Proposed points</th>
                 <th style="width: 30%;">Your vote</th>
             </tr>
@@ -28,18 +32,11 @@
         {% for target in targets %}
             <tr>
                 <td class="fw-bold">P{{ target.id_in_group }}</td>
+                <td>{{ target.contribution }}</td>
 
-                <td>
-                    {{ target.contribution }}
-                </td>
-
-                <td>
-                    {% if hide_others_endowment %}
-                        <span class="text-muted">Hidden</span>
-                    {% else %}
-                        {{ target.endowment }}
-                    {% endif %}
-                </td>
+                {% if not hide_others_endowment %}
+                    <td>{{ target.endowment }}</td>
+                {% endif %}
 
                 <td>
                     {{ target.total_proposed_points }}
@@ -49,7 +46,6 @@
                 </td>
 
                 <td>
-                    {# IMPORTANT: keep using formfield so selections persist after errors #}
                     {{ formfield target.vote_field label="" }}
                 </td>
             </tr>

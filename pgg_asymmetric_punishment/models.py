@@ -16,7 +16,10 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = 4
 
     # In the original paper: 24 periods, 6 per punishment system.
-    NUM_ROUNDS = 3
+    NUM_ROUNDS = 2
+
+    # Switch every 6 rounds
+    SWITCH_AFTER_ROUNDS = 1
 
     COUNTRY_CHOICES = sorted(
         [(c.alpha_2, c.name) for c in pycountry.countries],
@@ -49,65 +52,48 @@ class C(BaseConstants):
     PUNISHMENT_FINE_PER_MU = 2
 
 
-    INTRODUCTION_TEMPLATE = 'pgg_asymmetric_punishment/Introduction.html'
-
-
 class Subsession(BaseSubsession):
 
     def creating_session(self):
-
-        # Get punishment system from session config
-        ps = self.session.config.get('punishment_system', 1)
+        # --- Punishment system switches within-subject every 6 rounds ---
+        # rounds 1-6: peer (1)
+        # rounds 7-12: democratic (2)
+        ps = 1 if self.round_number <= C.SWITCH_AFTER_ROUNDS else 2
         for g in self.get_groups():
             g.punishment_system = ps
-
-        # --- Select endowment profile based on asymmetry level ---
-        # asymmetry is expected to be 0 (symmetric), 1 (small gap), or 2 (large gap)
+    
+        # --- Select endowment profile based on asymmetry level (between-subject) ---
         asym = self.session.config.get('asymmetry', 0)
-
-        # Map asymmetry values to endowment profile keys
+    
         asym_to_profile = {
             0: 'sym_30',
             1: 'asym_40_40_20_20',
             2: 'asym_60_30_20_10',
         }
-
+    
         profile_key = asym_to_profile.get(asym)
         if profile_key is None:
             raise ValueError(f"Unknown asymmetry value: {asym}")
-
+    
         profile = C.ENDOWMENT_PROFILES[profile_key]
-
-        # Assign endowments only once in round 1
-        # Store them in participant.vars so they remain fixed across rounds
+    
         for p in self.get_players():
-
             if self.round_number == 1:
-                # Assign endowment based on id_in_group order
                 e = profile[p.id_in_group - 1]
                 p.participant.vars['fixed_endowment'] = e
-
-                # Store status label for later analysis
+    
                 if asym == 0:
                     p.participant.vars['status'] = 'symmetric'
-
                 elif asym == 1:
-                    # Two advantaged (first two), two disadvantaged (last two)
-                    if p.id_in_group in [1, 2]:
-                        p.participant.vars['status'] = 'advantaged'
-                    else:
-                        p.participant.vars['status'] = 'disadvantaged'
-
+                    p.participant.vars['status'] = 'advantaged' if p.id_in_group in [1, 2] else 'disadvantaged'
                 elif asym == 2:
-                    # Three-tier hierarchy: top, middle, bottom
                     if p.id_in_group == 1:
                         p.participant.vars['status'] = 'top'
                     elif p.id_in_group == 2:
                         p.participant.vars['status'] = 'middle'
                     else:
                         p.participant.vars['status'] = 'bottom'
-
-            # In every round, copy stored values into Player fields
+    
             p.endowment = p.participant.vars.get('fixed_endowment')
             p.status = p.participant.vars.get('status', '')
 

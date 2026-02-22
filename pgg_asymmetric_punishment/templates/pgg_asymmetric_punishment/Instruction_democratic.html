@@ -1,0 +1,29 @@
+{% extends "global/Page.html" %}
+{% load otree %}
+
+{% block title %}
+Democratic Punishment
+{% endblock %}
+
+{% block content %}
+
+<h3>Democratic Punishment</h3>
+
+<div class="alert alert-warning">
+    The punishment rule has changed.
+</div>
+
+<ul>
+    <li>You may <strong>propose</strong> punishment points for other players (max <strong>9</strong> total).</li>
+    <li>If executed, each point costs the proposer <strong>1</strong> and reduces the target’s payoff by <strong>2</strong>.</li>
+    <li>For each player, the other group members vote.</li>
+    <li>Punishment is executed only if at least <strong>2 out of 3</strong> voters approve.</li>
+</ul>
+
+<p>
+Unlike peer punishment, punishment is implemented only after a <strong>majority vote</strong>.
+</p>
+
+{{ next_button }}
+
+{% endblock %}

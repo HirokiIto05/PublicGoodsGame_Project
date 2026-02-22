@@ -1,111 +1,51 @@
 SESSION_CONFIGS = [
     dict(
-        name='sym_peer_complete',
-        display_name='symmetric, peer, perfect',
+        name='sym_complete',
+        display_name='symmetric, perfect info (peer→democratic)',
         num_demo_participants=4,
         app_sequence=['pgg_asymmetric_punishment'],
         asymmetry=0,
-        punishment_system=1,  # 1:peer, 2:democratic
-        punishment_info_mode='full'
+        punishment_info_mode='full',
     ),
     dict(
-        name='sym_peer_incomplete',
-        display_name='symmetric, peer, imperfect',
+        name='sym_incomplete',
+        display_name='symmetric, imperfect info (peer→democratic)',
         num_demo_participants=4,
         app_sequence=['pgg_asymmetric_punishment'],
         asymmetry=0,
-        punishment_system=1,  # 1:peer, 2:democratic
-        punishment_info_mode='incomplete'
+        punishment_info_mode='incomplete',
     ),
     dict(
-        name='sym_democratic_complete',
-        display_name='symmetric, democratic, perfect',
-        num_demo_participants=4,
-        app_sequence=['pgg_asymmetric_punishment'],
-        asymmetry=0,
-        punishment_system=2,  # 1:peer, 2:democratic
-        punishment_info_mode='full'
-    ),
-    dict(
-        name='sym_democratic_incomplete',
-        display_name='symmetric, democratic, imperfect',
-        num_demo_participants=4,
-        app_sequence=['pgg_asymmetric_punishment'],
-        asymmetry=0,
-        punishment_system=2,  # 1:peer, 2:democratic
-        punishment_info_mode='incomplete'
-    ),
-    dict(
-        name='asym_small_peer_complete',
-        display_name='asymmetric(small), peer, perfect',
+        name='asym_small_complete',
+        display_name='asymmetric(small), perfect info (peer→democratic)',
         num_demo_participants=4,
         app_sequence=['pgg_asymmetric_punishment'],
         asymmetry=1,
-        punishment_system=1,
-        punishment_info_mode='full'
+        punishment_info_mode='full',
     ),
     dict(
-        name='asym_small_peer_incomplete',
-        display_name='asymmetric(small), peer, imperfect',
+        name='asym_small_incomplete',
+        display_name='asymmetric(small), imperfect info (peer→democratic)',
         num_demo_participants=4,
         app_sequence=['pgg_asymmetric_punishment'],
         asymmetry=1,
-        punishment_system=1,
-        punishment_info_mode='incomplete'
+        punishment_info_mode='incomplete',
     ),
     dict(
-        name='asym_small_democratic_complete',
-        display_name='asymmetric(small), democratic, perfect',
-        num_demo_participants=4,
-        app_sequence=['pgg_asymmetric_punishment'],
-        asymmetry=1,
-        punishment_system=2,
-        punishment_info_mode='full'
-    ),
-    dict(
-        name='asym_small_democratic_incomplete',
-        display_name='asymmetric(small), democratic, imperfect',
-        num_demo_participants=4,
-        app_sequence=['pgg_asymmetric_punishment'],
-        asymmetry=1,
-        punishment_system=2,
-        punishment_info_mode='incomplete'
-    ),
-    dict(
-        name='asym_large_peer_complete',
-        display_name='asymmetric(large), peer, perfect',
+        name='asym_large_complete',
+        display_name='asymmetric(large), perfect info (peer→democratic)',
         num_demo_participants=4,
         app_sequence=['pgg_asymmetric_punishment'],
         asymmetry=2,
-        punishment_system=1,
-        punishment_info_mode='full'
+        punishment_info_mode='full',
     ),
     dict(
-        name='asym_large_peer_incomplete',
-        display_name='asymmetric(large), peer, imperfect',
+        name='asym_large_incomplete',
+        display_name='asymmetric(large), imperfect info (peer→democratic)',
         num_demo_participants=4,
         app_sequence=['pgg_asymmetric_punishment'],
         asymmetry=2,
-        punishment_system=1,
-        punishment_info_mode='incomplete'
-    ),
-    dict(
-        name='asym_large_democratic_complete',
-        display_name='asymmetric(large), democratic, perfect',
-        num_demo_participants=4,
-        app_sequence=['pgg_asymmetric_punishment'],
-        asymmetry=2,
-        punishment_system=2,  # 1:peer, 2:democratic
-        punishment_info_mode='full'
-    ),
-    dict(
-        name='asym_large_democratic_incomplete',
-        display_name='asymmetric(large), democratic, imperfect',
-        num_demo_participants=4,
-        app_sequence=['pgg_asymmetric_punishment'],
-        asymmetry=2,
-        punishment_system=2,  # 1:peer, 2:democratic
-        punishment_info_mode='incomplete'
+        punishment_info_mode='incomplete',
     ),
 ]
 
