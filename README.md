@@ -38,16 +38,6 @@ The first two replicate the original study; the third introduces stronger inequa
 
 ---
 
-# Main Hypotheses
-
-* **H1**: Under incomplete information, punishment is based on absolute contributions, disadvantaging low-endowment players.
-* **H2**: Low-endowment players may increase contributions over time to avoid punishment.
-* **H3**: Greater inequality amplifies contribution gaps and payoff dispersion .
-
-
-
----
-
 # Project folder structure
 
 ```
@@ -83,22 +73,22 @@ PublicGoodsGame_Project/
 
 # Getting Started
 
-Clone the repository and move into the project folder:
-
+```bash
+# Clone the repository
 git clone https://github.com/HirokiIto05/PublicGoodsGame_Project.git
+
+# Move into the project directory
 cd PublicGoodsGame_Project
 
-Start the Docker container:
-
+# Build and start the Docker container (runs in background)
 docker compose up -d
 
-Enter the container:
-
+# Open a shell inside the container
 docker compose exec python bash
 
-Run the oTree development server:
-
+# Start the oTree development server
 otree devserver 0.0.0.0:8000
+```
 
 Then open your browser and go to:
 
