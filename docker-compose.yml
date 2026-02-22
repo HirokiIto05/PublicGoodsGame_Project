@@ -9,3 +9,5 @@ services:
       - .:/workspace:cached
     working_dir: /workspace
     tty: true
+    ports:
+      - "8000:8000"
