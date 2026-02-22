@@ -83,300 +83,110 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<p>Understood — here is a <strong>clear, structured, and concise README</strong> with a logical hierarchy and minimal redundancy.</p>
+<p>Below is a draft <strong>README.md</strong> for your project based on the uploaded files (<code>models.py</code>, <code>pages.py</code>, <code>settings.py</code>, <code>Dockerfile</code>, <code>docker-compose.yml</code>).</p>
 <hr>
-<section id="public-goods-game-otree-implementation" class="level1">
-<h1>Public Goods Game (oTree Implementation)</h1>
-</section>
-<section id="overview" class="level1">
-<h1>1. Overview</h1>
-<p>This project implements a Public Goods Game (PGG) in oTree with symmetric and asymmetric endowment distributions and multiple punishment systems.</p>
-<p>The experimental design follows the structure introduced in:</p>
-<p>Nockur, L., Pfattheicher, S., &amp; Keller, J. (2021). Different punishment systems in a public goods game with asymmetric endowments. <em>Journal of Experimental Social Psychology</em>, 93, 104096.</p>
-<p>lalia.N_different_punishment</p>
-<p>Specifically, this implementation reproduces:</p>
-<p>Symmetric vs.&nbsp;asymmetric endowment conditions</p>
-<p>Peer punishment</p>
-<p>Democratic punishment</p>
-<p>In addition, the project extends the framework by introducing alternative endowment distributions and a modular oTree-based structure that allows flexible treatment configuration.</p>
-<p>This repository is intended for experimental economics research, replication studies, and laboratory implementation.</p>
-<hr>
-</section>
-<section id="experimental-structure" class="level1">
-<h1>2. Experimental Structure</h1>
-<section id="group-setup" class="level2">
-<h2 class="anchored" data-anchor-id="group-setup">2.1 Group Setup</h2>
+<section id="public-goods-game-with-asymmetric-endowments-and-punishment-systems" class="level1">
+<h1>Public Goods Game with Asymmetric Endowments and Punishment Systems</h1>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>This project implements a <strong>Public Goods Game (PGG)</strong> using <strong>oTree</strong>, designed to study how different punishment institutions affect cooperation under symmetric and asymmetric endowment distributions.</p>
+<p>The experimental design is inspired by:</p>
 <ul>
-<li>4 players per group</li>
-<li>Fixed groups across rounds</li>
-<li>Player IDs reshuffled for display each round</li>
+<li>Nockur</li>
+<li>Pfattheicher</li>
+<li>Keller</li>
 </ul>
-<pre><code>PLAYERS_PER_GROUP = 4
-NUM_ROUNDS = 3</code></pre>
-<hr>
-</section>
-<section id="endowment-treatments" class="level2">
-<h2 class="anchored" data-anchor-id="endowment-treatments">2.2 Endowment Treatments</h2>
-<p>Endowments are fixed per participant across rounds.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ENDOWMENT_PROFILES <span class="op">=</span> {</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'sym_30'</span>: [<span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">30</span>],</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'asym_40_40_20_20'</span>: [<span class="dv">40</span>, <span class="dv">40</span>, <span class="dv">20</span>, <span class="dv">20</span>],</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'asym_80_40_20_20'</span>: [<span class="dv">80</span>, <span class="dv">40</span>, <span class="dv">20</span>, <span class="dv">20</span>],</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Each participant receives:</p>
+<p>(2021, Journal of Experimental Social Psychology)</p>
+<p>The game allows:</p>
 <ul>
-<li>A fixed endowment</li>
-<li>A status label stored in <code>participant.vars</code></li>
+<li>Symmetric and asymmetric endowment profiles</li>
+<li>Multiple punishment systems (e.g., peer punishment, central punishment)</li>
+<li>Flexible treatment extensions</li>
+<li>Multi-round interaction</li>
+<li>Deployment via Docker</li>
 </ul>
+<p>The application is containerized using Docker and can be run locally via <code>docker-compose</code>.</p>
 <hr>
 </section>
-<section id="public-goods-mechanism" class="level2">
-<h2 class="anchored" data-anchor-id="public-goods-mechanism">2.3 Public Goods Mechanism</h2>
-<section id="stage-1-contribution" class="level3">
-<h3 class="anchored" data-anchor-id="stage-1-contribution">Stage 1 — Contribution</h3>
-<p>Each player chooses:</p>
-<pre><code>0 ≤ contribution ≤ endowment</code></pre>
-</section>
-<section id="stage-2-redistribution" class="level3">
-<h3 class="anchored" data-anchor-id="stage-2-redistribution">Stage 2 — Redistribution</h3>
-<p>Total contributions are multiplied and equally redistributed:</p>
-<p>[ individual_return = ]</p>
-<pre><code>MULTIPLIER = 1.6</code></pre>
-</section>
-<section id="stage-3-payoff-before-punishment" class="level3">
-<h3 class="anchored" data-anchor-id="stage-3-payoff-before-punishment">Stage 3 — Payoff Before Punishment</h3>
-<pre><code>payoff_before_punishment
-= endowment - contribution + individual_return</code></pre>
-<hr>
-</section>
-</section>
-</section>
-<section id="punishment-systems" class="level1">
-<h1>3. Punishment Systems</h1>
-<p>Configured via:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>PUNISHMENT_SYSTEMS <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<hr>
-<section id="no-punishment-0" class="level2">
-<h2 class="anchored" data-anchor-id="no-punishment-0">3.1 No Punishment (0)</h2>
-<p>Final payoff:</p>
-<pre><code>payoff = payoff_before_punishment</code></pre>
-<hr>
-</section>
-<section id="peer-punishment-1" class="level2">
-<h2 class="anchored" data-anchor-id="peer-punishment-1">3.2 Peer Punishment (1)</h2>
-<p>Each player:</p>
+<section id="experimental-design" class="level2">
+<h2 class="anchored" data-anchor-id="experimental-design">Experimental Design</h2>
+<section id="public-goods-game" class="level3">
+<h3 class="anchored" data-anchor-id="public-goods-game">Public Goods Game</h3>
 <ul>
-<li>Can assign punishment to others</li>
-<li>Has a total budget of 9 MUs</li>
+<li>Group size: 4 players</li>
+<li>Each player receives an endowment (treatment dependent)</li>
+<li>Players decide how much to contribute to a public good</li>
+<li>Contributions are multiplied (MPCR mechanism)</li>
+<li>Earnings depend on own contribution and total group contribution</li>
 </ul>
-<pre><code>MAX_PUNISHMENT_BUDGET = 9
-PUNISHMENT_COST_PER_MU = 1
-PUNISHMENT_FINE_PER_MU = 2</code></pre>
-<p>For each punishment point:</p>
-<ul>
-<li>Punisher pays 1 MU</li>
-<li>Target loses 2 MUs</li>
-</ul>
-<p>Final payoff:</p>
-<pre><code>payoff = payoff_before_punishment
-         - punishment_received*2
-         - punishment_cost</code></pre>
-<hr>
 </section>
-<section id="democratic-punishment-2" class="level2">
-<h2 class="anchored" data-anchor-id="democratic-punishment-2">3.3 Democratic Punishment (2)</h2>
-<p>Two-stage punishment system:</p>
-<section id="stage-a-proposal" class="level3">
-<h3 class="anchored" data-anchor-id="stage-a-proposal">Stage A — Proposal</h3>
-<p>Players propose punishment points (same structure as peer punishment).</p>
+<section id="endowment-profiles" class="level3">
+<h3 class="anchored" data-anchor-id="endowment-profiles">Endowment Profiles</h3>
+<p>Defined in <code>models.py</code>:</p>
+<ul>
+<li>Symmetric: (30, 30, 30, 30)</li>
+<li>Asymmetric (moderate inequality): (40, 40, 20, 20)</li>
+<li>Asymmetric (high inequality): (80, 40, 20, 20)</li>
+</ul>
 </section>
-<section id="stage-b-voting" class="level3">
-<h3 class="anchored" data-anchor-id="stage-b-voting">Stage B — Voting</h3>
-<p>For each target:</p>
+<section id="punishment-stage" class="level3">
+<h3 class="anchored" data-anchor-id="punishment-stage">Punishment Stage</h3>
+<p>Depending on treatment:</p>
 <ul>
-<li>Other 3 players vote</li>
-<li>If ≥ 2 vote YES → punishment executed</li>
-<li>If &lt; 2 vote YES → no punishment</li>
-</ul>
-<p>If executed:</p>
-<ul>
-<li>Target loses 2 × proposed points</li>
-<li>Proposers pay 1 × proposed points</li>
-</ul>
-<p>If rejected:</p>
-<ul>
-<li>No cost</li>
-<li>No fine</li>
+<li>Peer punishment</li>
+<li>Potential central punishment</li>
+<li>Configurable punishment budget and cost structure</li>
 </ul>
 <hr>
 </section>
 </section>
-</section>
-<section id="data-collected" class="level1">
-<h1>4. Data Collected</h1>
-<section id="behavioral-variables" class="level2">
-<h2 class="anchored" data-anchor-id="behavioral-variables">Behavioral Variables</h2>
+<section id="project-structure" class="level2">
+<h2 class="anchored" data-anchor-id="project-structure">Project Structure</h2>
+<pre><code>.
+├── models.py              # Game logic, player/group structure, payoff rules
+├── pages.py               # Experimental flow and page definitions
+├── settings.py            # oTree session configuration
+├── Dockerfile             # Docker image definition
+├── docker-compose.yml     # Docker service configuration
+└── templates/             # HTML templates (if included)</code></pre>
+<hr>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## Getting Started</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>Follow the steps below to run the project locally using Docker.</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">### 1. Start the Docker Container</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>From the project root directory, run:</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose up <span class="at">-d</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This command:</p>
 <ul>
-<li>Contribution</li>
-<li>Relative contribution</li>
-<li>Punishment assigned</li>
-<li>Punishment received</li>
-<li>Payoff</li>
-<li>Status</li>
-</ul>
-</section>
-<section id="demographics" class="level2">
-<h2 class="anchored" data-anchor-id="demographics">Demographics</h2>
-<ul>
-<li>Age</li>
-<li>Gender</li>
-<li>Nationality (via <code>pycountry</code>)</li>
+<li>Builds the Docker image (if not already built)</li>
+<li>Starts the container in detached mode</li>
+<li>Exposes port <code>8000</code> to your local machine</li>
 </ul>
 <hr>
-</section>
-</section>
-<section id="running-the-project-with-docker" class="level1">
-<h1>5. Running the Project with Docker</h1>
-<section id="prerequisites" class="level2">
-<h2 class="anchored" data-anchor-id="prerequisites">5.1 Prerequisites</h2>
-<p>Ensure the following are installed:</p>
-<ul>
-<li>Docker Desktop or Docker Engine</li>
-<li>Docker Compose (included in Docker Desktop)</li>
-</ul>
-<p>Verify installation:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> <span class="at">--version</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="enter-the-container" class="level3">
+<h3 class="anchored" data-anchor-id="enter-the-container">2. Enter the Container</h3>
+<p>Open a shell inside the running container:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> compose exec python bash</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You are now inside the container environment (<code>/workspace</code>).</p>
 <hr>
 </section>
-<section id="option-a-using-docker-compose-recommended" class="level2">
-<h2 class="anchored" data-anchor-id="option-a-using-docker-compose-recommended">5.2 Option A: Using Docker Compose (Recommended)</h2>
-<p>Docker Compose manages the container lifecycle and volume mounting automatically.</p>
-<section id="start-the-container" class="level3">
-<h3 class="anchored" data-anchor-id="start-the-container">Start the Container</h3>
-<p>From the project root directory:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> up <span class="at">-d</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This will: * Build the image (if not already built) * Start a container in detached mode * Mount the current directory to <code>/workspace</code> in the container</p>
+<section id="start-the-otree-server" class="level3">
+<h3 class="anchored" data-anchor-id="start-the-otree-server">3. Start the oTree Server</h3>
+<p>Inside the container, run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">otree</span> devserver</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The development server will start and listen on port <code>8000</code>.</p>
+<hr>
 </section>
-<section id="access-the-container-shell" class="level3">
-<h3 class="anchored" data-anchor-id="access-the-container-shell">Access the Container Shell</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> exec python bash</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Inside the container, run oTree devserver:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">otree</span> devserver 0.0.0.0:8000</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Access the application in your browser:</p>
+<section id="access-the-application" class="level3">
+<h3 class="anchored" data-anchor-id="access-the-application">4. Access the Application</h3>
+<p>Open your browser and go to:</p>
 <pre><code>http://localhost:8000</code></pre>
 </section>
-<section id="stop-the-container" class="level3">
-<h3 class="anchored" data-anchor-id="stop-the-container">Stop the Container</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> down</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="rebuild-after-changes" class="level3">
-<h3 class="anchored" data-anchor-id="rebuild-after-changes">Rebuild After Changes</h3>
-<p>If you modify <code>requirements.txt</code> or <code>Dockerfile</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> down</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> build</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> up <span class="at">-d</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<hr>
-</section>
-</section>
-<section id="option-b-using-docker-cli" class="level2">
-<h2 class="anchored" data-anchor-id="option-b-using-docker-cli">5.3 Option B: Using Docker CLI</h2>
-<section id="build-image" class="level3">
-<h3 class="anchored" data-anchor-id="build-image">Build Image</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> pgg-otree .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="run-container-with-volume-mounting" class="level3">
-<h3 class="anchored" data-anchor-id="run-container-with-volume-mounting">Run Container with Volume Mounting</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-it</span> <span class="at">-v</span> <span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span>:/workspace <span class="at">-p</span> 8000:8000 pgg-otree bash</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Inside the container:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">otree</span> devserver 0.0.0.0:8000</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="run-directly-non-interactive" class="level3">
-<h3 class="anchored" data-anchor-id="run-directly-non-interactive">Run Directly (Non-interactive)</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 8000:8000 <span class="at">-v</span> <span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span>:/workspace pgg-otree otree devserver 0.0.0.0:8000</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<hr>
-</section>
-</section>
-<section id="common-commands" class="level2">
-<h2 class="anchored" data-anchor-id="common-commands">5.4 Common Commands</h2>
-<section id="reset-database" class="level3">
-<h3 class="anchored" data-anchor-id="reset-database">Reset Database</h3>
-<p>Inside the container:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">otree</span> resetdb</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="create-sessions" class="level3">
-<h3 class="anchored" data-anchor-id="create-sessions">Create Sessions</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">otree</span> create_session pgg_demo 4</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="view-container-logs" class="level3">
-<h3 class="anchored" data-anchor-id="view-container-logs">View Container Logs</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> logs <span class="at">-f</span> python</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="stop-all-containers" class="level3">
-<h3 class="anchored" data-anchor-id="stop-all-containers">Stop All Containers</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> down</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Or press <code>CTRL + C</code> if running in the foreground.</p>
-<hr>
-</section>
-</section>
-<section id="troubleshooting" class="level2">
-<h2 class="anchored" data-anchor-id="troubleshooting">5.5 Troubleshooting</h2>
-<section id="port-already-in-use" class="level3">
-<h3 class="anchored" data-anchor-id="port-already-in-use">Port Already in Use</h3>
-<p>If port 8000 is occupied:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> down</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Or change port mapping in docker-compose.yml</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="permission-issues" class="level3">
-<h3 class="anchored" data-anchor-id="permission-issues">Permission Issues</h3>
-<p>On Linux, if you encounter permission errors with volume mounts:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chown <span class="at">-R</span> <span class="va">$USER</span>:<span class="va">$USER</span> .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="container-not-starting" class="level3">
-<h3 class="anchored" data-anchor-id="container-not-starting">Container Not Starting</h3>
-<p>Check logs:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> logs python</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<hr>
-</section>
-</section>
-</section>
-<section id="session-configuration-example" class="level1">
-<h1>6. Session Configuration Example</h1>
-<p>In <code>settings.py</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>SESSION_CONFIGS <span class="op">=</span> [</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">dict</span>(</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>        name<span class="op">=</span><span class="st">'pgg_demo'</span>,</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>        app_sequence<span class="op">=</span>[<span class="st">'pgg_diff_punishment'</span>],</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>        num_demo_participants<span class="op">=</span><span class="dv">4</span>,</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>        punishment_system<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>        endowment_profile<span class="op">=</span><span class="st">'asym_40_40_20_20'</span>,</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<hr>
-</section>
-<section id="project-structure" class="level1">
-<h1>7. Project Structure</h1>
-<pre><code>pgg_diff_punishment/
-│
-├── models.py
-├── pages.py
-├── templates/
-│   └── pgg_diff_punishment/
-│
-├── settings.py
-├── Dockerfile</code></pre>
-<hr>
-</section>
-<section id="customization" class="level1">
-<h1>8. Customization</h1>
-<p>You can modify:</p>
-<ul>
-<li>Endowment structures</li>
-<li>Punishment parameters</li>
-<li>Number of rounds</li>
-<li>Treatment conditions via session configs</li>
-</ul>
-<hr>
 </section>
 
 </main>
